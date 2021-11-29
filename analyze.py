@@ -11,17 +11,6 @@ work_in_small = True
 logging.basicConfig(level=logging.INFO)
 
 
-def to_unix_date_col(df):
-	"""
-	Create a column with unix timestep given Date column in df
-	"""
-	col_names = df.schema.names
-	date_col = df[col_names[0]]
-	unix_date_col = unix_timestamp(date_col, format='yyyy-MM-dd')
-
-	return df.withColumn('Date', unix_date_col)
-
-
 def make_multiple_dfs(df):
 	"""
 	Assumed df in the format ['Date', 'ticker1', 'ticker2', ...]
@@ -32,8 +21,6 @@ def make_multiple_dfs(df):
 
 	first_col_name = col_names[0]
 	tickers = col_names[1:]
-
-	df = to_unix_date_col(df)
 
 	for ticker_name in tickers:
 		current_df = df.select([first_col_name, ticker_name]).na.drop()
